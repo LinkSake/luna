@@ -42,8 +42,8 @@ base/                         contenido original redactado por Luna (fuente de v
 ## Checkpoints
 - [x] **CP0** — EXIF/GPS eliminado, `.gitignore`, commit inicial reescrito, scaffold de Hugo, workflow.
 - [x] **CP1a** — Tema: header, footer, menú móvil, home, sobre mí, obras, archivo, contacto, lightbox.
-- [ ] **CP1b** — Importación de blogs (subagente): verificar los 110 bundles y hacer commit de `content/blog` + `scripts/`.
-- [ ] **CP2** — Templates del blog (lista, término, post) revisados contra posts reales (imágenes, embeds, poemas con `<br>`).
+- [x] **CP1b** — Blogs importados: 110 bundles (26 Transcisthor + 84 El Canto de Lemuria), 82 imágenes locales, 0 fallos.
+- [x] **CP2** — Templates del blog (lista paginada, filtro por origen, post con anterior/siguiente) revisados con posts reales.
 - [ ] **CP3** — QA: `hugo --gc --minify` limpio, screenshots desktop/móvil, revisión de código, links rotos.
 - [ ] **CP4** — Deploy: `gh repo create LinkSake/luna --public --source . --push`, habilitar Pages (workflow), CNAME `luna.eltelar.xyz`.
 
@@ -60,5 +60,12 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - [ ] DNS: registro `CNAME luna → linksake.github.io` en el proveedor de `eltelar.xyz`; después activar «Enforce HTTPS» en Settings → Pages.
 - [ ] Revisar posts viejos de Blogspot: para ocultar uno, agrega `draft: true` en su front matter.
 
+## Notas del blog importado
+- 7 posts de Blogspot no tenían título; el importador les puso su primera línea (por ejemplo «Muerde, muerde mis sombras Belial»).
+- «My Best Band» y «My Best Band 2» solo tenían un reproductor Flash muerto. Quedaron con la nota «Esta entrada contenía un reproductor multimedia antiguo que ya no está disponible.» Candidatos a `draft: true`.
+- «La Guerra y la Nieve»: el video de YouTube incrustado (`0fdgjcsACkg`) probablemente ya no se puede reproducir.
+- Se perdió la alineación centrada o a la derecha de algunos epígrafes, porque se quitan los `style`.
+
 ## Registro
-- 2026-11-17 — CP0 y CP1a completos. El subagente de importación de blogs sigue corriendo.
+- 2026-11-17 — CP0 y CP1a completos.
+- 2026-11-17 — CP1b y CP2 completos (blog importado y templates).

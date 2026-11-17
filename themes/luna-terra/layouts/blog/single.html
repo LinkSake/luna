@@ -22,8 +22,8 @@
       <ul class="tags">{{ range . }}<li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}</ul>
     {{ end }}
     <nav class="post-nav" aria-label="Más entradas">
-      {{ with .PrevInSection }}<a class="post-nav__prev" href="{{ .RelPermalink }}"><span>Siguiente</span>{{ .Title }}</a>{{ else }}<span></span>{{ end }}
-      {{ with .NextInSection }}<a class="post-nav__next" href="{{ .RelPermalink }}"><span>Anterior</span>{{ .Title }}</a>{{ else }}<span></span>{{ end }}
+      {{ with .PrevInSection }}<a class="post-nav__prev" href="{{ .RelPermalink }}"><span>Anterior</span>{{ .Title }}</a>{{ else }}<span></span>{{ end }}
+      {{ with .NextInSection }}<a class="post-nav__next" href="{{ .RelPermalink }}"><span>Siguiente</span>{{ .Title }}</a>{{ else }}<span></span>{{ end }}
     </nav>
   </footer>
 </article>

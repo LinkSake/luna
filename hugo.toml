@@ -5,6 +5,7 @@ title = "Luna Sophia Terra"
 theme = "luna-terra"
 timeZone = "America/Chihuahua"
 enableRobotsTXT = true
+capitalizeListTitles = false
 
 [pagination]
   pagerSize = 12
