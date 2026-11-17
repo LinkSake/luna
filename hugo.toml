@@ -36,8 +36,7 @@ capitalizeListTitles = false
   alias = "Lulietfly"
   tagline = "Escritora | Gestora Cultural | Artista Multidisciplinaria"
   description = "Luna Sophia Terra (Lulietfly): escritora, gestora cultural y artista multidisciplinaria de Chihuahua, México."
-  # PENDIENTE: reemplazar por el correo real de Luna
-  email = "hola@ejemplo.com"
+  email = "luna@eltelar.xyz"
   ogImage = "images/foto-inicio.jpg"
 
   [params.designer]

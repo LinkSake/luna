@@ -7,7 +7,7 @@
 Sitio de autora en Hugo (tema propio `themes/luna-terra`) que replica el diseño de https://www.julia-ulrich-art.com/ con el contenido que redactó Luna. Ese contenido estaba en `base/` y ya se migró a `content/`; la carpeta se eliminó. Se publica en GitHub Pages (`LinkSake/luna`) con el dominio `luna.eltelar.xyz`.
 
 ## Decisiones tomadas
-- **Correo:** placeholder `hola@ejemplo.com` en `hugo.toml` → `params.email`. **PENDIENTE** el correo real.
+- **Correo:** `luna@eltelar.xyz` en `hugo.toml` → `params.email`.
 - **Footer:** «© {año} Luna Sophia Terra» a la izquierda y «Diseño: Luis Angel Ortega» (link a https://luisangel.me/) a la derecha.
 - **Blog:** importar los dos blogs completos: Transcisthor (WordPress, 26 posts) y El Canto de Lemuria (Blogspot, 84 posts).
   - Taxonomía `origen` para filtrar.
@@ -64,10 +64,10 @@ hugo --gc --minify     # build de producción a public/
 Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright (`~/Library/Caches/ms-playwright/chromium_headless_shell-*/…/chrome-headless-shell --screenshot`).
 
 ## Pendientes para Luna o el usuario
-- [ ] Correo real de contacto → `hugo.toml` `params.email`.
-- [ ] Portada de *Pista Transcendental No. 9* → agregar `imagen:` en `content/obras/index.md` y el archivo en ese bundle.
-- [ ] **DNS (bloquea que el sitio se vea):** crear `CNAME luna → linksake.github.io` en el proveedor de `eltelar.xyz`. Mientras no exista, `linksake.github.io/luna/` redirige a un dominio que no resuelve.
-- [ ] Cuando el certificado esté listo: activar «Enforce HTTPS» en Settings → Pages (`gh api -X PUT repos/LinkSake/luna/pages -F https_enforced=true`) y volver a correr el deploy (`gh workflow run hugo.yaml -R LinkSake/luna`). El workflow toma `baseURL` de Pages; hoy es `http://` y con HTTPS pasará a `https://`.
+- [x] Correo real de contacto: `luna@eltelar.xyz`.
+- [x] Portada provisional (teaser «Coming soon») de *Pista Transcendental No. 9* en `content/obras/pista-transcendental-9-portada.jpg`. Cuando exista la definitiva, reemplaza ese archivo; el estado sigue diciendo «portada e ilustraciones pendientes».
+- [x] DNS: `luna.eltelar.xyz` ya resuelve y el sitio está en línea.
+- [x] HTTPS forzado en Pages; deploy re-ejecutado para generar URLs `https://`.
 - [ ] Revisar posts viejos de Blogspot: para ocultar uno, agrega `draft: true` en su front matter.
 
 ## Notas del blog importado
@@ -81,6 +81,7 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - 2026-11-17 — CP1b y CP2 completos (blog importado y templates).
 - 2026-11-17 — CP3 completo (QA y correcciones de la revisión).
 - 2026-11-17 — CP4 completo: publicado en GitHub Pages. Falta el DNS.
+- 2026-11-17 — DNS y HTTPS listos; correo real y portada provisional de *Pista Transcendental No. 9*.
 
 ## Mejoras aplicadas (2026-11-17, segunda ronda)
 - [x] Lora auto-hospedada; ya no hay llamadas a Google Fonts.

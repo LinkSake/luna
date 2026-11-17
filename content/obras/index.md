@@ -18,6 +18,7 @@ libros:
       alt: "Firma de libro de Entre Dos Tierras"
       caption: "Firma de libro, 2026"
   - titulo: "Pista Transcendental No. 9"
+    imagen: "pista-transcendental-9-portada.jpg"
     tipo: "Novela ilustrada"
     descripcion: "Novela ilustrada de ciencia ficción. Proyecto becado por FOMAC 9. Inspirada en la leyenda real de La Pascualita de Chihuahua; sigue a un autómata que despierta en una Chihuahua sumergida."
     estado: "En proceso — portada e ilustraciones pendientes"
