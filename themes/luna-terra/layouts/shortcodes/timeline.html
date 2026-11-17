@@ -1,0 +1,4 @@
+{{/* Lista «año · título» al estilo de la lista de exposiciones. El contenido es Markdown. */}}
+<div class="timeline">
+{{ .Inner | .Page.RenderString (dict "display" "block") }}
+</div>

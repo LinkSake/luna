@@ -1,0 +1,24 @@
+{{/*
+  Imagen responsive en WebP. Re-codificar descarta el EXIF del original.
+  Contexto: dict
+    img     recurso de imagen (requerido)
+    alt     texto alternativo
+    sizes   atributo sizes (default 100vw)
+    widths  anchos candidatos (default 480 800 1200 1600)
+    class   clase del <img>
+    eager   true para no usar lazy loading
+*/}}
+{{- $img := .img -}}
+{{- $widths := .widths | default (slice 480 800 1200 1600) -}}
+{{- $set := slice -}}
+{{- range $widths -}}{{- if le . $img.Width -}}{{- $set = $set | append . -}}{{- end -}}{{- end -}}
+{{- if not $set -}}{{- $set = slice $img.Width -}}{{- end -}}
+{{- $srcset := slice -}}
+{{- $fallback := "" -}}
+{{- range $set -}}
+  {{- $r := $img.Process (printf "resize %dx webp" .) -}}
+  {{- $srcset = $srcset | append (printf "%s %dw" $r.RelPermalink $r.Width) -}}
+  {{- $fallback = $r -}}
+{{- end -}}
+<img src="{{ $fallback.RelPermalink }}" srcset="{{ delimit $srcset ", " }}" sizes="{{ .sizes | default "100vw" }}" width="{{ $fallback.Width }}" height="{{ $fallback.Height }}" alt="{{ .alt }}"{{ with .class }} class="{{ . }}"{{ end }}{{ if .eager }} fetchpriority="high"{{ else }} loading="lazy"{{ end }} decoding="async">
+{{- /**/ -}}

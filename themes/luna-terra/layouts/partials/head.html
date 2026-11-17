@@ -1,0 +1,33 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{ $title := cond .IsHome (printf "%s · %s" site.Title site.Params.tagline) (printf "%s · %s" .Title site.Title) }}
+<title>{{ $title }}</title>
+{{ $desc := .Description | default .Summary | default site.Params.description | plainify | truncate 160 }}
+<meta name="description" content="{{ $desc }}">
+<meta name="author" content="{{ site.Params.author }}">
+<link rel="canonical" href="{{ .Permalink }}">
+
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ cond .IsHome site.Title .Title }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:locale" content="es_MX">
+<meta property="og:type" content="{{ cond .IsPage "article" "website" }}">
+{{ $og := "" }}
+{{ with .Params.image }}{{ with $.Resources.Get . }}{{ $og = . }}{{ end }}{{ end }}
+{{ if not $og }}{{ $og = resources.Get site.Params.ogImage }}{{ end }}
+{{ with $og }}
+  {{ $ogi := .Fill "1200x630 Center webp q80" }}
+  <meta property="og:image" content="{{ $ogi.Permalink }}">
+  <meta property="og:image:width" content="{{ $ogi.Width }}">
+  <meta property="og:image:height" content="{{ $ogi.Height }}">
+{{ end }}
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&display=swap">
+{{ $css := resources.Get "css/main.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+{{ with .OutputFormats.Get "rss" }}<link rel="alternate" type="application/rss+xml" href="{{ .RelPermalink }}" title="{{ site.Title }}">{{ end }}

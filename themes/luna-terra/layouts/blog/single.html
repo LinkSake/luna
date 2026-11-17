@@ -1,0 +1,30 @@
+{{ define "bodyclass" }}page page--post{{ end }}
+{{ define "main" }}
+<article class="post">
+  <header class="post__header">
+    <p class="post-meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_long" }}</time>
+      {{ range .GetTerms "origen" }} · <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}
+    </p>
+    <h1 class="post__title">{{ .Title }}</h1>
+  </header>
+  {{ with .Params.image }}{{ with $.Resources.Get . }}
+    <figure class="post__featured">{{ partial "img.html" (dict "img" . "alt" $.Title "sizes" "(min-width: 760px) 720px, 100vw" "widths" (slice 480 720 1440) "eager" true) }}</figure>
+  {{ end }}{{ end }}
+  <div class="prose post__content">
+    {{ .Content }}
+  </div>
+  <footer class="post__footer">
+    {{ with .Params.original_url }}
+      <p class="post__origin">Publicado originalmente en <a href="{{ . }}" target="_blank" rel="noopener">{{ range first 1 ($.GetTerms "origen") }}{{ .LinkTitle }}{{ else }}el blog original{{ end }}</a>.</p>
+    {{ end }}
+    {{ with .GetTerms "tags" }}
+      <ul class="tags">{{ range . }}<li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>{{ end }}</ul>
+    {{ end }}
+    <nav class="post-nav" aria-label="Más entradas">
+      {{ with .PrevInSection }}<a class="post-nav__prev" href="{{ .RelPermalink }}"><span>Siguiente</span>{{ .Title }}</a>{{ else }}<span></span>{{ end }}
+      {{ with .NextInSection }}<a class="post-nav__next" href="{{ .RelPermalink }}"><span>Anterior</span>{{ .Title }}</a>{{ else }}<span></span>{{ end }}
+    </nav>
+  </footer>
+</article>
+{{ end }}

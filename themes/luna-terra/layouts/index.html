@@ -1,0 +1,17 @@
+{{ define "bodyclass" }}page page--home{{ end }}
+{{ define "main" }}
+{{ with .Params.hero }}
+<section class="hero">
+  <div class="hero__text">
+    <p class="hero__quote">{{ .text }}</p>
+    <p class="hero__byline">{{ site.Params.tagline }}</p>
+    <a class="button" href="{{ .link | relURL }}">{{ .button }} {{ partial "icon.html" "arrow" }}</a>
+  </div>
+  <figure class="hero__image">
+    {{ with resources.Get .image }}
+      {{ partial "img.html" (dict "img" . "alt" $.Params.hero.alt "sizes" "(min-width: 900px) 50vw, 100vw" "eager" true) }}
+    {{ end }}
+  </figure>
+</section>
+{{ end }}
+{{ end }}

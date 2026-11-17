@@ -1,0 +1,8 @@
+name = "Luna Terra"
+license = "MIT"
+description = "Tema de autora minimalista para Luna Sophia Terra, inspirado en un portafolio de pintura."
+min_version = "0.146.0"
+
+[author]
+  name = "Luis Angel Ortega"
+  homepage = "https://luisangel.me/"

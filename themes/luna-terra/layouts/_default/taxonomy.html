@@ -1,0 +1,14 @@
+{{ define "bodyclass" }}page page--blog{{ end }}
+{{ define "main" }}
+<section class="blog">
+  <header class="blog__header">
+    <p class="eyebrow"><a href="{{ "/blog/" | relURL }}">Blog</a></p>
+    <h1 class="page-title">{{ .Title | humanize }}</h1>
+  </header>
+  <ul class="term-cloud">
+    {{ range .Data.Terms.Alphabetical }}
+      <li><a href="{{ .Page.RelPermalink }}">{{ .Page.Title }} <span class="count">{{ .Count }}</span></a></li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}

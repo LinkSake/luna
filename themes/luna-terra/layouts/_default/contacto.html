@@ -1,0 +1,24 @@
+{{ define "bodyclass" }}page page--contact{{ end }}
+{{ define "main" }}
+<article class="split split--center">
+  <figure class="split__media">
+    {{ with .Resources.Get .Params.image }}
+      {{ partial "img.html" (dict "img" . "alt" $.Params.alt "sizes" "(min-width: 900px) 40vw, 100vw" "eager" true) }}
+    {{ end }}
+  </figure>
+  <div class="split__body">
+    <h1 class="page-title">{{ .Title }}</h1>
+    {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+    <ul class="contact-list">
+      <li>
+        <a href="mailto:{{ site.Params.email }}">{{ partial "icon.html" "mail" }}<span>{{ site.Params.email }}</span></a>
+      </li>
+      {{ range site.Params.social }}
+      <li>
+        <a href="{{ .url }}" target="_blank" rel="noopener">{{ partial "icon.html" .icon }}<span>{{ .handle }}</span></a>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
+</article>
+{{ end }}

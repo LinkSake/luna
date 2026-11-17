@@ -1,0 +1,9 @@
+<footer class="site-footer">
+  <div class="site-footer__left">
+    {{ partial "social-icons.html" (dict "class" "social--footer") }}
+    <p>© {{ now.Year }} {{ site.Params.author }}</p>
+  </div>
+  <p class="site-footer__right">
+    Diseño: {{ with site.Params.designer }}<a href="{{ .url }}" target="_blank" rel="noopener">{{ .name }}</a>{{ end }}
+  </p>
+</footer>

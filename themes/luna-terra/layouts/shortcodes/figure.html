@@ -1,0 +1,14 @@
+{{/* Uso: {{< figure src="foto.jpg" alt="…" caption="…" class="narrow|logo" link="https://…" >}} */}}
+{{- $src := .Get "src" -}}
+{{- with .Page.Resources.Get $src -}}
+{{- $big := partial "large.html" . -}}
+<figure class="figure {{ $.Get "class" }}">
+  {{- $href := $.Get "link" | default $big.RelPermalink -}}
+  <a href="{{ $href }}"{{ if $.Get "link" }} target="_blank" rel="noopener"{{ else }} data-lightbox="{{ $.Page.File.UniqueID }}" data-caption="{{ $.Get "caption" }}"{{ end }}>
+    {{ partial "img.html" (dict "img" . "alt" ($.Get "alt") "sizes" "(min-width: 900px) 640px, 100vw" "widths" (slice 480 800 1280)) }}
+  </a>
+  {{- with $.Get "caption" }}<figcaption>{{ . }}</figcaption>{{ end }}
+</figure>
+{{- else -}}
+{{- errorf "figure: no se encontró la imagen %q en %s" $src $.Page.File.Path -}}
+{{- end -}}

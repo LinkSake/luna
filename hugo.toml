@@ -1,0 +1,86 @@
+baseURL = "https://luna.eltelar.xyz/"
+languageCode = "es-mx"
+defaultContentLanguage = "es"
+title = "Luna Sophia Terra"
+theme = "luna-terra"
+timeZone = "America/Chihuahua"
+enableRobotsTXT = true
+
+[pagination]
+  pagerSize = 12
+
+[taxonomies]
+  tag = "tags"
+  origen = "origen"
+
+[markup.goldmark.renderer]
+  # Permite el HTML de los posts importados y de los bloques en las páginas
+  unsafe = true
+
+[markup.goldmark.parser.attribute]
+  block = true
+
+[imaging]
+  quality = 82
+  resampleFilter = "Lanczos"
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML"]
+  term = ["HTML"]
+
+[params]
+  author = "Luna Sophia Terra"
+  alias = "Lulietfly"
+  tagline = "Escritora | Gestora Cultural | Artista Multidisciplinaria"
+  description = "Luna Sophia Terra (Lulietfly): escritora, gestora cultural y artista multidisciplinaria de Chihuahua, México."
+  # PENDIENTE: reemplazar por el correo real de Luna
+  email = "hola@ejemplo.com"
+  ogImage = "images/foto-inicio.jpg"
+
+  [params.designer]
+    name = "Luis Angel Ortega"
+    url = "https://luisangel.me/"
+
+  [[params.social]]
+    name = "Instagram"
+    icon = "instagram"
+    url = "https://www.instagram.com/lulietfly/"
+    handle = "@lulietfly"
+  [[params.social]]
+    name = "Radio Mujericas en Spotify"
+    icon = "spotify"
+    url = "https://open.spotify.com/show/29G3upcJxpMJf7JjE5xQPB"
+    handle = "Radio Mujericas"
+  [[params.social]]
+    name = "El Telar"
+    icon = "telar"
+    url = "https://eltelar.xyz"
+    handle = "eltelar.xyz"
+
+[menus]
+  [[menus.main]]
+    name = "Inicio"
+    pageRef = "/"
+    weight = 10
+  [[menus.main]]
+    name = "Sobre mí"
+    pageRef = "/sobre-mi"
+    weight = 20
+  [[menus.main]]
+    name = "Blog"
+    pageRef = "/blog"
+    weight = 30
+  [[menus.main]]
+    name = "Obras"
+    pageRef = "/obras"
+    weight = 40
+  [[menus.main]]
+    name = "Archivo"
+    pageRef = "/archivo"
+    weight = 50
+  [[menus.main]]
+    name = "Contacto"
+    pageRef = "/contacto"
+    weight = 60

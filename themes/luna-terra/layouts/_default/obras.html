@@ -1,0 +1,13 @@
+{{ define "bodyclass" }}page page--works{{ end }}
+{{ define "main" }}
+<section class="works">
+  <h1 class="page-title page-title--center">{{ .Title }}</h1>
+  {{ with .Content }}<div class="prose prose--center">{{ . }}</div>{{ end }}
+
+  <h2 class="works__heading">Libros</h2>
+  {{ range .Params.libros }}{{ partial "obra.html" (dict "obra" . "page" $) }}{{ end }}
+
+  <h2 class="works__heading">Antologías</h2>
+  {{ range .Params.antologias }}{{ partial "obra.html" (dict "obra" . "page" $) }}{{ end }}
+</section>
+{{ end }}

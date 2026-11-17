@@ -1,0 +1,27 @@
+{{/* Lista paginada de posts con filtro por blog de origen. Contexto: página de sección o término. */}}
+{{ $current := . }}
+{{ with site.Taxonomies.origen }}
+<nav class="filters" aria-label="Filtrar por blog de origen">
+  <a href="{{ "/blog/" | relURL }}"{{ if eq $current.Section "blog" }} class="is-active" aria-current="page"{{ end }}>Todos</a>
+  {{ range .ByCount }}
+    <a href="{{ .Page.RelPermalink }}"{{ if eq $current.RelPermalink .Page.RelPermalink }} class="is-active" aria-current="page"{{ end }}>{{ .Page.Title }} <span class="count">{{ .Count }}</span></a>
+  {{ end }}
+</nav>
+{{ end }}
+{{ $pages := .RegularPagesRecursive }}
+{{ if eq .Kind "term" }}{{ $pages = .Pages }}{{ end }}
+{{ $pag := .Paginate $pages.ByDate.Reverse }}
+<ol class="post-list">
+  {{ range $pag.Pages }}
+  <li class="post-item">
+    <p class="post-meta">
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date | time.Format ":date_long" }}</time>
+      {{ with .Params.origen }} · {{ index . 0 }}{{ end }}
+    </p>
+    <h2 class="post-item__title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+    {{ with .Params.summary | default .Summary }}<p class="post-item__summary">{{ . | plainify }}</p>{{ end }}
+    <a class="read-more" href="{{ .RelPermalink }}" aria-label="Leer «{{ .Title }}»">Leer {{ partial "icon.html" "arrow" }}</a>
+  </li>
+  {{ end }}
+</ol>
+{{ partial "pagination.html" $pag }}

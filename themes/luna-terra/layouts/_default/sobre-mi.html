@@ -1,0 +1,31 @@
+{{ define "bodyclass" }}page page--about{{ end }}
+{{ define "main" }}
+<article class="split">
+  <figure class="split__media">
+    {{ with .Resources.Get .Params.image }}
+      {{ partial "img.html" (dict "img" . "alt" $.Params.alt "sizes" "(min-width: 900px) 45vw, 100vw" "eager" true) }}
+    {{ end }}
+  </figure>
+  <div class="split__body">
+    <h1 class="page-title">{{ .Title }}</h1>
+    <div class="prose">
+      {{ .Content }}
+    </div>
+    {{ with .Params.reconocimientos }}
+    <section class="awards">
+      <h2>Reconocimientos</h2>
+      <ul class="timeline">
+        {{ range . }}<li><strong>{{ .year }}</strong> · {{ .text | $.RenderString }}</li>{{ end }}
+      </ul>
+      {{ with $.Params.nota_reconocimientos }}<p class="note">{{ . | $.RenderString }}</p>{{ end }}
+    </section>
+    {{ end }}
+  </div>
+</article>
+{{ with .Params.cita }}
+<blockquote class="pull-quote">
+  <p>«{{ .texto }}»</p>
+  <cite>— {{ .autor }}</cite>
+</blockquote>
+{{ end }}
+{{ end }}

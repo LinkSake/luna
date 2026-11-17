@@ -1,0 +1,33 @@
+{{ $o := .obra }}{{ $p := .page }}
+<article class="obra">
+  <figure class="obra__cover">
+    {{ with $o.imagen }}{{ with $p.Resources.Get . }}
+      {{ partial "img.html" (dict "img" . "alt" (printf "Portada de %s" $o.titulo) "sizes" "(min-width: 900px) 360px, 80vw" "widths" (slice 400 720)) }}
+    {{ end }}{{ else }}
+      <div class="cover-placeholder" role="img" aria-label="Portada en preparación">
+        <span class="cover-placeholder__title">{{ $o.titulo }}</span>
+        <span class="cover-placeholder__note">Portada en preparación</span>
+      </div>
+    {{ end }}
+  </figure>
+  <div class="obra__body">
+    {{ with $o.tipo }}<p class="eyebrow">{{ . }}</p>{{ end }}
+    <h3 class="obra__title">{{ $o.titulo }}</h3>
+    <p>{{ $o.descripcion }}</p>
+    {{ with $o.estado }}<p class="obra__status"><em>{{ . }}</em></p>{{ end }}
+    {{ with $o.links }}
+    <p class="obra__links">
+      {{ range . }}<a class="button button--outline" href="{{ .url }}" target="_blank" rel="noopener">{{ .texto }} {{ partial "icon.html" "arrow" }}</a>{{ end }}
+    </p>
+    {{ end }}
+    {{ with $o.extra }}{{ with $p.Resources.Get .imagen }}
+      {{ $big := partial "large.html" . }}
+      <figure class="obra__extra">
+        <a href="{{ $big.RelPermalink }}" data-lightbox="{{ $o.titulo }}" data-caption="{{ $o.extra.caption }}">
+          {{ partial "img.html" (dict "img" . "alt" $o.extra.alt "sizes" "240px" "widths" (slice 480)) }}
+        </a>
+        {{ with $o.extra.caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+      </figure>
+    {{ end }}{{ end }}
+  </div>
+</article>

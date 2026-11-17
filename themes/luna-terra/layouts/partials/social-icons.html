@@ -1,0 +1,11 @@
+{{/* Lista de redes. Contexto: dict "class" (string) "labels" (bool) */}}
+<ul class="social {{ .class }}">
+  {{ range site.Params.social }}
+  <li>
+    <a href="{{ .url }}" target="_blank" rel="noopener" aria-label="{{ .name }}" title="{{ .name }}">
+      {{ partial "icon.html" .icon }}
+      {{ if $.labels }}<span>{{ .handle }}</span>{{ end }}
+    </a>
+  </li>
+  {{ end }}
+</ul>
