@@ -4,7 +4,7 @@
 > Plan completo: `~/.claude/plans/de-la-manera-m-s-compiled-locket.md` (copia resumida abajo).
 
 ## Objetivo
-Sitio de autora en Hugo (tema propio `themes/luna-terra`) que replica el diseño de https://www.julia-ulrich-art.com/ con el contenido de `base/`. Se publica en GitHub Pages (`LinkSake/luna`) con el dominio `luna.eltelar.xyz`.
+Sitio de autora en Hugo (tema propio `themes/luna-terra`) que replica el diseño de https://www.julia-ulrich-art.com/ con el contenido que redactó Luna. Ese contenido estaba en `base/` y ya se migró a `content/`; la carpeta se eliminó. Se publica en GitHub Pages (`LinkSake/luna`) con el dominio `luna.eltelar.xyz`.
 
 ## Decisiones tomadas
 - **Correo:** placeholder `hola@ejemplo.com` en `hugo.toml` → `params.email`. **PENDIENTE** el correo real.
@@ -19,10 +19,10 @@ Sitio de autora en Hugo (tema propio `themes/luna-terra`) que replica el diseño
   - Pages con `build_type=workflow`.
   - CNAME configurado por API, no con un archivo.
 - **Privacidad:**
-  - Todas las imágenes de `base/` se re-guardaron sin EXIF, porque dos fotos traían coordenadas GPS. El commit inicial se reescribió (`839066b`) antes de tener remoto.
-  - Las páginas con fotos usan `build.publishResources: false`, así que solo se publican derivados WebP redimensionados.
+  - Todas las imágenes originales se re-guardaron sin EXIF, porque dos fotos traían coordenadas GPS. El commit inicial se reescribió (`839066b`) antes de tener remoto.
+  - Las páginas con fotos y el blog (vía `cascade` en `content/blog/_index.md`) usan `build.publishResources: false`, así que solo se publican derivados WebP redimensionados. El template del post reescribe los `src` de su contenido.
 - **Tipografía y colores** (sacados del CSS de Pixpa):
-  - Lora para títulos y navegación; sans-serif gris para el cuerpo.
+  - Lora (auto-hospedada en `themes/luna-terra/static/fonts/`) para títulos y navegación; sans-serif gris para el cuerpo.
   - Colores: `#192E2F` títulos y botón, `#3B3B3B` nav, `#6F6F6F` cuerpo, `#F3F3F3` fondos suaves.
 
 ## Estructura
@@ -36,7 +36,7 @@ content/contacto/index.md     bundle; layout "contacto"
 content/blog/                 _index.md + 110 bundles importados (index.html con front matter)
 themes/luna-terra/            layouts, shortcodes (figure, gallery, spotify, timeline), assets/css/main.css, assets/js
 scripts/import_blogs.py       importador de blogs
-base/                         contenido original redactado por Luna (fuente de verdad; Hugo no lo lee)
+README.md                     documentación de uso y edición
 ```
 
 ## Checkpoints
@@ -74,7 +74,7 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - 7 posts de Blogspot no tenían título; el importador les puso su primera línea (por ejemplo «Muerde, muerde mis sombras Belial»).
 - «My Best Band» y «My Best Band 2» solo tenían un reproductor Flash muerto. Quedaron con la nota «Esta entrada contenía un reproductor multimedia antiguo que ya no está disponible.» Candidatos a `draft: true`.
 - «La Guerra y la Nieve»: el video de YouTube incrustado (`0fdgjcsACkg`) probablemente ya no se puede reproducir.
-- Se perdió la alineación centrada o a la derecha de algunos epígrafes, porque se quitan los `style`.
+- La alineación centrada o a la derecha se conserva como `<div class="align-center|align-right">` (35 posts).
 
 ## Registro
 - 2026-11-17 — CP0 y CP1a completos.
@@ -82,6 +82,12 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - 2026-11-17 — CP3 completo (QA y correcciones de la revisión).
 - 2026-11-17 — CP4 completo: publicado en GitHub Pages. Falta el DNS.
 
-## Mejoras opcionales (no bloquean)
-- Auto-hospedar la fuente Lora en lugar de Google Fonts, por privacidad de las visitas.
-- Las `featured.jpg` de WordPress se publican también como originales (hasta 1.4 MB, sin EXIF). Se podría poner `publishResources: false` en el blog y reescribir los `src` del contenido a derivados WebP.
+## Mejoras aplicadas (2026-11-17, segunda ronda)
+- [x] Lora auto-hospedada; ya no hay llamadas a Google Fonts.
+- [x] El blog ya no publica imágenes originales: solo derivados WebP (máximo 1440px). El sitio bajó de 25 MB a 19 MB.
+- [x] `aria-current` correcto en la paginación del blog.
+- [x] Alineación de epígrafes conservada en el importador.
+- [x] Carpeta `base/` eliminada y `README.md` agregado.
+
+## Mejora pendiente (opcional)
+- El workflow toma el `baseURL` de Pages (hoy `http://`). Se podría usar el de `hugo.toml` y evitar volver a correr el deploy al activar HTTPS. No se hizo para respetar el esquema de `metwo`.

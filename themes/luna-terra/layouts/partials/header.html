@@ -8,8 +8,11 @@
   <nav id="site-nav" class="site-nav" aria-label="Principal">
     <ul>
       {{ $current := . }}
+      {{ $pageNum := 1 }}
+      {{ if or (and (eq .Kind "section") (eq .Section "blog")) (eq .Kind "term") }}{{ $pageNum = (partial "paginator.html" .).PageNumber }}{{ end }}
       {{ range site.Menus.main }}
-        {{ $exact := $current.IsMenuCurrent "main" . }}
+        {{/* En /blog/page/N/ el menú apunta a la sección, no a la página actual */}}
+        {{ $exact := and ($current.IsMenuCurrent "main" .) (eq $pageNum 1) }}
         {{ $active := or $exact ($current.HasMenuCurrent "main" .) }}
         {{ if and (eq .URL "/blog/") (or (eq $current.Section "blog") (eq $current.Kind "taxonomy") (eq $current.Kind "term")) }}{{ $active = true }}{{ end }}
         <li><a href="{{ .URL }}"{{ if $active }} class="is-active" aria-current="{{ cond $exact "page" "true" }}"{{ end }}>{{ .Name }}</a></li>

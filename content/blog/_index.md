@@ -1,4 +1,7 @@
 ---
+cascade:
+  build:
+    publishResources: false
 title: "Blog"
 description: "Reflexiones sobre ciencia ficción, mitologías locales, feminismo y cultura digital."
 ---

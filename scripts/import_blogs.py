@@ -216,7 +216,7 @@ TRANSPARENT_BLOCK = {"div", "center", "form", "section", "article", "header", "f
                      "fieldset", "legend", "details", "summary", "colgroup", "marquee"}
 INLINE_KEEP = {"em", "i", "strong", "b", "a"}
 STRUCTURAL = {"blockquote", "ul", "ol", "li", "h2", "h3", "h4", "figure", "figcaption",
-              "hr", "embed-wrap"}
+              "hr", "embed-wrap", "aligned"}
 
 WIDGET_CLASSES = ("sharedaddy", "jp-relatedposts", "jetpack-likes-widget", "wpcnt",
                   "wordads", "sd-sharing", "sd-like", "wpl-likebox", "post-likes-widget",
@@ -390,10 +390,35 @@ def caption_table_to_figure(node: Node) -> list:
         not (isinstance(o, str) and not o.strip()) for o in other) else [])
 
 
+def alignment_of(node: Node) -> str | None:
+    """Alineación centrada o a la derecha declarada con style, align o <center>."""
+    if node.tag == "center":
+        return "center"
+    style = node.attrs.get("style", "").replace(" ", "").lower()
+    m = re.search(r"text-align:(center|right)", style)
+    if m:
+        return m.group(1)
+    align = node.attrs.get("align", "").strip().lower()
+    return align if align in ("center", "right") else None
+
+
+ALIGNABLE = {"p", "div", "center", "h1", "h2", "h3", "h4", "h5", "h6", "blockquote"}
+
+
 def clean(node) -> list:
     """Return the cleaned replacement(s) for one raw DOM child."""
     if isinstance(node, str):
         return [node]
+    if node.tag in ALIGNABLE:
+        align = alignment_of(node)
+        if align:
+            # Se conserva como contenedor <div class="align-…">, sin el style original.
+            inner = Node(node.tag, {k: v for k, v in node.attrs.items() if k not in ("style", "align")},
+                         node.children)
+            if inner.tag == "center":
+                inner.tag = "div"
+            cleaned = clean(inner)
+            return [Node("aligned", {"align": align}, cleaned)] if cleaned else []
     tag = node.tag
     attrs = node.attrs
 
@@ -693,6 +718,16 @@ def process_block(node: Node) -> list:
         return [Node("hr")]
     if t == "embed-wrap":
         return [node]
+    if t == "aligned":
+        inner = blockify(node.children)
+        # Una alineación anidada igual a la del padre no aporta nada.
+        flat: list = []
+        for b in inner:
+            if b.tag == "aligned" and b.attrs == node.attrs:
+                flat.extend(b.children)
+            else:
+                flat.append(b)
+        return [Node("aligned", dict(node.attrs), flat)] if flat else []
     if t in ("h2", "h3", "h4"):
         inl = inline_content(node.children)
         return [Node(t, {}, inl)] if any(has_content(x) for x in inl) else []
@@ -797,6 +832,9 @@ def ser_blocks(blocks: list, indent: str = "") -> str:
         t = b.tag
         if t == "hr":
             out.append(f"{indent}<hr>")
+        elif t == "aligned":
+            out.append(f'{indent}<div class="align-{b.attrs["align"]}">\n'
+                       f'{ser_blocks(b.children, indent + "  ")}\n{indent}</div>')
         elif t == "embed-wrap":
             ifr = b.children[0]
             title = ifr.attrs.get("title")
@@ -817,7 +855,7 @@ def ser_blocks(blocks: list, indent: str = "") -> str:
                 for li in b.children:
                     if li.children and all(isinstance(c, Node) and c.tag in
                                            ("p", "ul", "ol", "blockquote", "figure", "hr",
-                                            "embed-wrap", "h2", "h3", "h4")
+                                            "embed-wrap", "h2", "h3", "h4", "aligned")
                                            for c in li.children):
                         inner.append(f"{indent}  <li>\n{ser_blocks(li.children, indent + '    ')}\n{indent}  </li>")
                     elif any(isinstance(c, Node) and c.tag in ("p", "ul", "ol", "blockquote")
@@ -825,7 +863,7 @@ def ser_blocks(blocks: list, indent: str = "") -> str:
                         # mixed inline + block: wrap inline runs in <p>
                         fixed, run = [], []
                         for c in li.children:
-                            if isinstance(c, Node) and c.tag in ("p", "ul", "ol", "blockquote", "figure", "hr", "embed-wrap"):
+                            if isinstance(c, Node) and c.tag in ("p", "ul", "ol", "blockquote", "figure", "hr", "embed-wrap", "aligned"):
                                 if run:
                                     fixed.append(Node("p", {}, run))
                                     run = []
@@ -850,7 +888,7 @@ def plain_text(nodes: list, br: str = " ") -> str:
             parts.append(n)
         elif n.tag == "br":
             parts.append(br)
-        elif n.tag in ("p", "h2", "h3", "h4", "li", "figcaption", "blockquote", "ul", "ol"):
+        elif n.tag in ("p", "h2", "h3", "h4", "li", "figcaption", "blockquote", "ul", "ol", "aligned"):
             parts.append(" " + plain_text(n.children, br) + " ")
         elif n.tag in ("img", "embed-wrap", "hr"):
             parts.append(" ")

@@ -11,8 +11,20 @@
   {{ with .Params.image }}{{ with $.Resources.Get . }}
     <figure class="post__featured">{{ partial "img.html" (dict "img" . "alt" $.Title "sizes" "(min-width: 760px) 720px, 100vw" "widths" (slice 480 720 1440) "eager" true) }}</figure>
   {{ end }}{{ end }}
+  {{/* Las imágenes del bundle no se publican tal cual: se sustituyen por derivados WebP. */}}
+  {{ $content := .Content }}
+  {{ range .Resources.ByType "image" }}
+    {{ $attrs := "" }}
+    {{ if eq .MediaType.SubType "gif" }}
+      {{ $attrs = printf `src="%s"` .RelPermalink }}
+    {{ else }}
+      {{ $r := .Process (printf "resize %dx webp" (cond (gt .Width 1440) 1440 .Width)) }}
+      {{ $attrs = printf `src="%s" width="%d" height="%d"` $r.RelPermalink $r.Width $r.Height }}
+    {{ end }}
+    {{ $content = replace $content (printf `src="%s"` .Name) (printf `%s loading="lazy" decoding="async"` $attrs) }}
+  {{ end }}
   <div class="prose post__content">
-    {{ .Content }}
+    {{ $content | safeHTML }}
   </div>
   <footer class="post__footer">
     {{ with .Params.original_url }}
