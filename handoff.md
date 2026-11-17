@@ -52,7 +52,9 @@ base/                         contenido original redactado por Luna (fuente de v
     - Contraste AA (`--c-faint #767676`).
     - El foco ya no se escapa del lightbox ni del menú móvil (`inert`).
     - Arreglado el overflow de URLs largas y los márgenes de `<figure>`.
-- [ ] **CP4** — Deploy: `gh repo create LinkSake/luna --public --source . --push`, habilitar Pages (workflow), CNAME `luna.eltelar.xyz`.
+- [x] **CP4** — Deploy:
+  - Repo público https://github.com/LinkSake/luna, Pages con `build_type=workflow` y CNAME `luna.eltelar.xyz`.
+  - Workflow en verde. Todas las páginas responden 200 (verificado contra la IP de GitHub Pages con `Host: luna.eltelar.xyz`); /no-existe/ da 404.
 
 ## Cómo verificar en local
 ```bash
@@ -64,7 +66,8 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 ## Pendientes para Luna o el usuario
 - [ ] Correo real de contacto → `hugo.toml` `params.email`.
 - [ ] Portada de *Pista Transcendental No. 9* → agregar `imagen:` en `content/obras/index.md` y el archivo en ese bundle.
-- [ ] DNS: registro `CNAME luna → linksake.github.io` en el proveedor de `eltelar.xyz`; después activar «Enforce HTTPS» en Settings → Pages.
+- [ ] **DNS (bloquea que el sitio se vea):** crear `CNAME luna → linksake.github.io` en el proveedor de `eltelar.xyz`. Mientras no exista, `linksake.github.io/luna/` redirige a un dominio que no resuelve.
+- [ ] Cuando el certificado esté listo: activar «Enforce HTTPS» en Settings → Pages (`gh api -X PUT repos/LinkSake/luna/pages -F https_enforced=true`) y volver a correr el deploy (`gh workflow run hugo.yaml -R LinkSake/luna`). El workflow toma `baseURL` de Pages; hoy es `http://` y con HTTPS pasará a `https://`.
 - [ ] Revisar posts viejos de Blogspot: para ocultar uno, agrega `draft: true` en su front matter.
 
 ## Notas del blog importado
@@ -77,6 +80,7 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - 2026-11-17 — CP0 y CP1a completos.
 - 2026-11-17 — CP1b y CP2 completos (blog importado y templates).
 - 2026-11-17 — CP3 completo (QA y correcciones de la revisión).
+- 2026-11-17 — CP4 completo: publicado en GitHub Pages. Falta el DNS.
 
 ## Mejoras opcionales (no bloquean)
 - Auto-hospedar la fuente Lora en lugar de Google Fonts, por privacidad de las visitas.
