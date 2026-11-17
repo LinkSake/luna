@@ -21,9 +21,11 @@ parsed and re-serialised through an allow-list, never executed.
 from __future__ import annotations
 
 import html
+import ipaddress
 import json
 import re
 import shutil
+import socket
 import sys
 import time
 import unicodedata
@@ -293,6 +295,14 @@ def youtube_embed(url: str) -> str | None:
 
 def embed_node(src: str, title: str = "") -> Node | None:
     src = absolutize(html.unescape(src))
+    # Python y los navegadores interpretan distinto "\\", espacios y userinfo
+    # (https://evil\\@player.vimeo.com): se rechazan antes de validar el host.
+    if re.search(r"[\\\s\x00-\x1f]", src):
+        return None
+    parts = urllib.parse.urlsplit(src)
+    if parts.username or parts.password or not parts.hostname:
+        return None
+    src = urllib.parse.urlunsplit((parts.scheme, parts.hostname, parts.path, parts.query, ""))
     host = host_of(src)
     if not host_matches(host, EMBED_HOSTS) and host != "youtu.be":
         return None
@@ -960,8 +970,57 @@ class ImageStats:
         self.bytes = 0
 
 
+def is_public_host(url: str) -> bool:
+    """Evita descargar desde direcciones locales o privadas citadas en el HTML remoto."""
+    host = host_of(url)
+    if not host:
+        return False
+    try:
+        infos = socket.getaddrinfo(host, None)
+    except OSError:
+        return False
+    for info in infos:
+        ip = ipaddress.ip_address(info[4][0].split("%")[0])
+        if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_reserved or ip.is_multicast:
+            return False
+    return True
+
+
+def strip_metadata(data: bytes, ext: str) -> bytes:
+    """Quita EXIF/XMP/comentarios (JPEG APP1-APP15 salvo ICC, COM) y chunks de texto/EXIF de PNG."""
+    if ext in ("jpg", "jpeg") and data[:2] == b"\xff\xd8":
+        out = bytearray(data[:2])
+        i = 2
+        while i + 4 <= len(data) and data[i] == 0xFF:
+            marker = data[i + 1]
+            if marker == 0xDA:  # inicio de los datos de imagen: el resto se copia tal cual
+                out += data[i:]
+                return bytes(out)
+            length = int.from_bytes(data[i + 2:i + 4], "big")
+            seg = data[i:i + 2 + length]
+            is_icc = marker == 0xE2 and seg[4:16] == b"ICC_PROFILE\x00"
+            if not ((0xE1 <= marker <= 0xEF and not is_icc) or marker == 0xFE):
+                out += seg
+            i += 2 + length
+        return data  # estructura inesperada: no se toca
+    if ext == "png" and data[:8] == b"\x89PNG\r\n\x1a\n":
+        out = bytearray(data[:8])
+        i = 8
+        while i + 8 <= len(data):
+            length = int.from_bytes(data[i:i + 4], "big")
+            ctype = data[i + 4:i + 8]
+            chunk = data[i:i + 12 + length]
+            if ctype not in (b"eXIf", b"tEXt", b"iTXt", b"zTXt", b"tIME"):
+                out += chunk
+            i += 12 + length
+        return bytes(out)
+    return data
+
+
 def download_image(url: str) -> tuple[bytes, str] | tuple[None, str]:
     reason = "no candidates"
+    if not is_public_host(absolutize(url)):
+        return None, f"{url}: host no público o no resoluble"
     for cand in candidate_urls(url):
         try:
             data, ctype = fetch(cand, MAX_IMAGE_BYTES)
@@ -970,7 +1029,7 @@ def download_image(url: str) -> tuple[bytes, str] | tuple[None, str]:
             continue
         ext = sniff_ext(data, ctype.lower())
         if ext:
-            return data, ext
+            return strip_metadata(data, ext), ext
         reason = f"{cand}: not a raster image ({ctype or 'unknown type'})"
     return None, reason
 

@@ -1,16 +1,24 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {{ $title := cond .IsHome (printf "%s · %s" site.Title site.Params.tagline) (printf "%s · %s" .Title site.Title) }}
+{{ $url := .Permalink }}
+{{ if or (and (eq .Kind "section") (eq .Section "blog")) (eq .Kind "term") }}
+  {{ $pag := partial "paginator.html" . }}
+  {{ if gt $pag.PageNumber 1 }}
+    {{ $url = $pag.URL | absURL }}
+    {{ $title = printf "%s · Página %d · %s" .Title $pag.PageNumber site.Title }}
+  {{ end }}
+{{ end }}
 <title>{{ $title }}</title>
 {{ $desc := .Description | default .Summary | default site.Params.description | plainify | truncate 160 }}
 <meta name="description" content="{{ $desc }}">
 <meta name="author" content="{{ site.Params.author }}">
-<link rel="canonical" href="{{ .Permalink }}">
+<link rel="canonical" href="{{ $url }}">
 
 <meta property="og:site_name" content="{{ site.Title }}">
 <meta property="og:title" content="{{ cond .IsHome site.Title .Title }}">
 <meta property="og:description" content="{{ $desc }}">
-<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:url" content="{{ $url }}">
 <meta property="og:locale" content="es_MX">
 <meta property="og:type" content="{{ cond .IsPage "article" "website" }}">
 {{ $og := "" }}

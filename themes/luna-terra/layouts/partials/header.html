@@ -9,9 +9,10 @@
     <ul>
       {{ $current := . }}
       {{ range site.Menus.main }}
-        {{ $active := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) }}
+        {{ $exact := $current.IsMenuCurrent "main" . }}
+        {{ $active := or $exact ($current.HasMenuCurrent "main" .) }}
         {{ if and (eq .URL "/blog/") (or (eq $current.Section "blog") (eq $current.Kind "taxonomy") (eq $current.Kind "term")) }}{{ $active = true }}{{ end }}
-        <li><a href="{{ .URL }}"{{ if $active }} class="is-active" aria-current="page"{{ end }}>{{ .Name }}</a></li>
+        <li><a href="{{ .URL }}"{{ if $active }} class="is-active" aria-current="{{ cond $exact "page" "true" }}"{{ end }}>{{ .Name }}</a></li>
       {{ end }}
     </ul>
     {{ partial "social-icons.html" (dict "class" "social--drawer") }}

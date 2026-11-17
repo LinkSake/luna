@@ -1,0 +1,4 @@
+{{- /* Paginador compartido por la lista de posts y el <head> (la primera llamada a .Paginate fija la colección). */ -}}
+{{- $pages := .RegularPagesRecursive -}}
+{{- if eq .Kind "term" -}}{{- $pages = .Pages -}}{{- end -}}
+{{- return (.Paginate $pages.ByDate.Reverse) -}}

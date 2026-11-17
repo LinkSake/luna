@@ -5,7 +5,7 @@
   --c-heading: #192e2f;
   --c-text: #3b3b3b;
   --c-muted: #6f6f6f;
-  --c-faint: #9e9e9e;
+  --c-faint: #767676;
   --c-line: #e4e4e4;
   --c-soft: #f3f3f3;
   --c-bg: #ffffff;
@@ -226,7 +226,8 @@ strong, b { color: var(--c-text); font-weight: 700; }
 
 /* ---------- Prosa ---------- */
 
-.prose { max-width: var(--measure); }
+.prose { max-width: var(--measure); overflow-wrap: break-word; }
+.prose a { overflow-wrap: anywhere; }
 .prose > :first-child { margin-top: 0; }
 .prose p { margin: 0 0 1.1em; }
 .prose h2 { font-size: clamp(26px, 3vw, 32px); }
@@ -240,6 +241,8 @@ strong, b { color: var(--c-text); font-weight: 700; }
 }
 .prose iframe { max-width: 100%; }
 .prose img { margin: 1.4em auto; }
+.prose figure { margin: 2em 0; }
+.prose figure img { margin: 0 auto; }
 .prose--center { margin: 0 auto; text-align: center; }
 
 .prose-page { max-width: 880px; margin: 0 auto; }

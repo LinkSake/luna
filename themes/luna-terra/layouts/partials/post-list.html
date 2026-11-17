@@ -1,16 +1,14 @@
 {{/* Lista paginada de posts con filtro por blog de origen. Contexto: página de sección o término. */}}
 {{ $current := . }}
+{{ $pag := partial "paginator.html" . }}
 {{ with site.Taxonomies.origen }}
 <nav class="filters" aria-label="Filtrar por blog de origen">
-  <a href="{{ "/blog/" | relURL }}"{{ if eq $current.Section "blog" }} class="is-active" aria-current="page"{{ end }}>Todos</a>
+  <a href="{{ "/blog/" | relURL }}"{{ if eq $current.Section "blog" }} class="is-active"{{ if eq $pag.PageNumber 1 }} aria-current="page"{{ end }}{{ end }}>Todos</a>
   {{ range .ByCount }}
-    <a href="{{ .Page.RelPermalink }}"{{ if eq $current.RelPermalink .Page.RelPermalink }} class="is-active" aria-current="page"{{ end }}>{{ .Page.Title }} <span class="count">{{ .Count }}</span></a>
+    <a href="{{ .Page.RelPermalink }}"{{ if eq $current.RelPermalink .Page.RelPermalink }} class="is-active"{{ if eq $pag.PageNumber 1 }} aria-current="page"{{ end }}{{ end }}>{{ .Page.Title }} <span class="count">{{ .Count }}</span></a>
   {{ end }}
 </nav>
 {{ end }}
-{{ $pages := .RegularPagesRecursive }}
-{{ if eq .Kind "term" }}{{ $pages = .Pages }}{{ end }}
-{{ $pag := .Paginate $pages.ByDate.Reverse }}
 <ol class="post-list">
   {{ range $pag.Pages }}
   <li class="post-item">

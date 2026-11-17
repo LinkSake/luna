@@ -33,17 +33,26 @@
     caption.hidden = !link.dataset.caption;
   }
 
+  // Todo lo que no es el visor queda inerte mientras está abierto (aria-modal real).
+  function setInert(on) {
+    Array.prototype.forEach.call(document.body.children, function (el) {
+      if (el !== box) el.inert = on;
+    });
+  }
+
   function open(link) {
     opener = link;
     group = links.filter(function (l) { return l.dataset.lightbox === link.dataset.lightbox; });
     prev.hidden = next.hidden = group.length < 2;
     show(group.indexOf(link));
+    setInert(true);
     box.classList.add("is-open");
     document.body.style.overflow = "hidden";
     box.querySelector(".lightbox__close").focus();
   }
 
   function close() {
+    setInert(false);
     box.classList.remove("is-open");
     document.body.style.overflow = "";
     img.removeAttribute("src");
