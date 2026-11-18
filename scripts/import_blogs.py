@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Import the two legacy blogs into Hugo page bundles under content/blog/.
+"""Import the legacy blog into Hugo page bundles under content/blog/.
 
-Sources (public, no auth):
-  * WordPress "Transcisthor"        (public-api.wordpress.com REST v1.1)
-  * Blogspot  "El Canto de Lemuria" (Blogger JSON feed)
+Source (public, no auth):
+  * WordPress "Transcisthor" (public-api.wordpress.com REST v1.1)
 
 Each post becomes ``content/blog/<YYYY-MM-DD>-<slug>/index.html`` with YAML
 front matter, a sanitised HTML body and its images downloaded next to it.
@@ -40,14 +39,8 @@ BLOG_DIR = ROOT / "content" / "blog"
 BUNDLE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}-")
 
 WP_API = "https://public-api.wordpress.com/rest/v1.1/sites/transcisthor.wordpress.com/posts/?number=100&page={page}"
-BS_FEED = "https://elcantodelemuria.blogspot.com/feeds/posts/default?alt=json&max-results=500&start-index={start}"
 
 ORIGIN_WP = "Transcisthor"
-ORIGIN_BS = "El Canto de Lemuria"
-
-# Luna reservó los textos de El Canto de Lemuria para futuras novelas: se importan
-# como borrador (draft: true) para que no se publiquen en el sitio.
-DRAFT_ORIGINS = {ORIGIN_BS}
 
 USER_AGENT = "Mozilla/5.0 (compatible; luna-blog-import/1.0; +https://github.com/)"
 TIMEOUT = 20
@@ -977,14 +970,6 @@ def sniff_ext(data: bytes, ctype: str) -> str | None:
 def upgrade_image_url(url: str) -> str:
     parts = urllib.parse.urlsplit(url)
     host = (parts.hostname or "").lower()
-    if host_matches(host, ("blogger.googleusercontent.com", "bp.blogspot.com", "ggpht.com")):
-        path = parts.path
-        segs = path.split("/")
-        if len(segs) >= 3 and re.fullmatch(r"[swh]\d+(-[a-z0-9-]*)?|w\d+-h\d+(-[a-z0-9-]*)?", segs[-2]):
-            segs[-2] = "s1600"
-            path = "/".join(segs)
-        path = re.sub(r"=[swh]\d+[^/]*$", "=s1600", path)
-        return urllib.parse.urlunsplit((parts.scheme, parts.netloc, path, parts.query, ""))
     if host.endswith("files.wordpress.com") or "/wp-content/uploads/" in parts.path \
             or host_matches(host, ("wp.com",)):
         return urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path, "", ""))
@@ -1162,36 +1147,6 @@ def collect_wp() -> list[dict]:
     return out
 
 
-def collect_bs() -> list[dict]:
-    entries, start, total = [], 1, None
-    while True:
-        data = fetch_json(BS_FEED.format(start=start))
-        feed = data.get("feed", {})
-        total = int(feed.get("openSearch$totalResults", {}).get("$t", "0"))
-        batch = feed.get("entry", []) or []
-        entries.extend(batch)
-        if not batch or len(entries) >= total:
-            break
-        start = len(entries) + 1
-    out = []
-    for e in entries:
-        alt = next((l.get("href", "") for l in e.get("link", []) if l.get("rel") == "alternate"), "")
-        if alt.startswith("http://"):
-            alt = "https://" + alt[7:]
-        content = (e.get("content") or e.get("summary") or {}).get("$t", "")
-        out.append({
-            "origin": ORIGIN_BS,
-            "title": clean_title(e.get("title", {}).get("$t", "")),
-            "date": normalize_date(e["published"]["$t"]),
-            "url": alt,
-            "html": content,
-            "terms": [squash(c.get("term", "")) for c in e.get("category", []) or []],
-            "featured": "",
-        })
-    print(f"Blogspot: total={total} fetched={len(out)}")
-    return out
-
-
 def dedupe_terms(terms: list[str]) -> list[str]:
     seen, out = set(), []
     for t in terms:
@@ -1209,7 +1164,7 @@ def main() -> int:
         return 1
 
     # 1. Fetch everything first so a network failure never leaves us half-written.
-    posts = collect_wp() + collect_bs()
+    posts = collect_wp()
     posts.sort(key=lambda p: (p["date"], p["origin"], p["url"]))
 
     # 2. Remove previously generated bundles (only YYYY-MM-DD-* dirs).
@@ -1220,7 +1175,7 @@ def main() -> int:
 
     stats = ImageStats()
     used_slugs: dict[str, int] = {}
-    report = {"untitled": [], "odd": [], "count": {ORIGIN_WP: 0, ORIGIN_BS: 0}}
+    report = {"untitled": [], "odd": [], "count": {ORIGIN_WP: 0}}
 
     for post in posts:
         blocks = build_body(post["html"])
@@ -1296,7 +1251,6 @@ def main() -> int:
               f"title: {yaml_str(title)}",
               f"date: {post['date']}",
               f"origen: [{yaml_str(post['origin'])}]",
-              *(["draft: true"] if post["origin"] in DRAFT_ORIGINS else []),
               f"original_url: {yaml_str(post['url'])}"]
         if tags:
             fm.append("tags: [" + ", ".join(yaml_str(t) for t in tags) + "]")

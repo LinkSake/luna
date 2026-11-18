@@ -55,17 +55,15 @@ scripts/import_blogs.py    importador de los blogs anteriores
   tags: ["…"]
   ---
   ```
-  Si una entrada nueva usa un `origen` distinto, aparece como un filtro más en la página del blog.
+  `origen` es opcional: es solo el texto que se muestra junto a la fecha (por ejemplo «Transcisthor» en las entradas importadas).
 - **Ocultar una entrada** sin borrarla: agrega `draft: true` a su front matter.
 
 ## Blogs anteriores
 
-`scripts/import_blogs.py` trae las entradas de [Transcisthor](https://transcisthor.wordpress.com/) (WordPress) y de [El Canto de Lemuria](http://elcantodelemuria.blogspot.com/) (Blogspot) por sus APIs públicas. Para cada blog:
-- Limpia el HTML y conserva poemas, alineaciones y videos.
+`scripts/import_blogs.py` trae las entradas de [Transcisthor](https://transcisthor.wordpress.com/) (WordPress) por su API pública:
+- Limpia el HTML y conserva alineaciones y videos.
 - Descarga las imágenes sin metadatos.
 - Escribe un bundle por entrada.
-
-Las entradas de El Canto de Lemuria se importan como borrador (`draft: true`, constante `DRAFT_ORIGINS` del script), porque Luna reservó ese material para futuras novelas. No aparecen en el sitio, pero sus archivos siguen en este repo público.
 
 ```bash
 python3 -I scripts/import_blogs.py

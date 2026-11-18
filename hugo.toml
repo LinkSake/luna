@@ -12,7 +12,6 @@ capitalizeListTitles = false
 
 [taxonomies]
   tag = "tags"
-  origen = "origen"
 
 [markup.goldmark.renderer]
   # Permite el HTML de los posts importados y de los bloques en las páginas

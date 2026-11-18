@@ -9,8 +9,9 @@ Sitio de autora en Hugo (tema propio `themes/luna-terra`) que replica el diseño
 ## Decisiones tomadas
 - **Correo:** `luna@eltelar.xyz` en `hugo.toml` → `params.email`.
 - **Footer:** «© {año} Luna Sophia Terra» a la izquierda y «Diseño: Luis Angel Ortega» (link a https://luisangel.me/) a la derecha.
-- **Blog:** importar los dos blogs completos: Transcisthor (WordPress, 26 posts) y El Canto de Lemuria (Blogspot, 84 posts).
-  - Taxonomía `origen` para filtrar.
+- **Blog:** las 26 entradas de Transcisthor (WordPress).
+  - `origen` es solo un texto en el front matter («Transcisthor»), no una taxonomía; no hay rutas `/origen/`.
+  - Etiquetas en `/tags/`.
   - Los posts sin título toman su primera línea.
   - Imágenes descargadas al bundle.
   - Script: `scripts/import_blogs.py` (solo stdlib; se corre con `python3 -I scripts/import_blogs.py`; es idempotente).
@@ -42,7 +43,7 @@ README.md                     documentación de uso y edición
 ## Checkpoints
 - [x] **CP0** — EXIF/GPS eliminado, `.gitignore`, commit inicial reescrito, scaffold de Hugo, workflow.
 - [x] **CP1a** — Tema: header, footer, menú móvil, home, sobre mí, obras, archivo, contacto, lightbox.
-- [x] **CP1b** — Blogs importados: 110 bundles (26 Transcisthor + 84 El Canto de Lemuria), 82 imágenes locales, 0 fallos.
+- [x] **CP1b** — Blog importado: 26 posts de Transcisthor con sus imágenes locales.
 - [x] **CP2** — Templates del blog (lista paginada, filtro por origen, post con anterior/siguiente) revisados con posts reales.
 - [x] **CP3** — QA:
   - Build limpio, 0 links rotos y 0 GPS en `public/`. Screenshots en desktop y móvil.
@@ -68,17 +69,11 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - [x] Portada provisional (teaser «Coming soon») de *Pista Transcendental No. 9* en `content/obras/pista-transcendental-9-portada.jpg`. Cuando exista la definitiva, reemplaza ese archivo; el estado sigue diciendo «portada e ilustraciones pendientes».
 - [x] DNS: `luna.eltelar.xyz` ya resuelve y el sitio está en línea.
 - [x] HTTPS forzado en Pages; deploy re-ejecutado para generar URLs `https://`.
-- [x] Posts de Blogspot (El Canto de Lemuria): todos ocultos como borrador a pedido de Luna.
-- [ ] **Decisión pendiente sobre El Canto de Lemuria**, que define qué hacer con la taxonomía `origen`:
-  - Si no vuelve: quitar `origen` (las rutas `/origen/…`, el link al blog de origen en cada post y el filtro) y dejar solo las etiquetas.
-  - Si vuelve: quitar `draft: true` (y `DRAFT_ORIGINS` en el importador); el filtro del blog reaparece solo.
-  - Mientras tanto `/origen/transcisthor/` funciona y `/origen/el-canto-de-lemuria/` da 404.
+- [x] El segundo blog (Blogspot) se eliminó por completo a pedido de Luna: posts, soporte en el importador e historial de git.
 
 ## Notas del blog importado
-- 7 posts de Blogspot no tenían título; el importador les puso su primera línea (por ejemplo «Muerde, muerde mis sombras Belial»).
-- «My Best Band» y «My Best Band 2» solo tenían un reproductor Flash muerto. Quedaron con la nota «Esta entrada contenía un reproductor multimedia antiguo que ya no está disponible.» Candidatos a `draft: true`.
 - «La Guerra y la Nieve»: el video de YouTube incrustado (`0fdgjcsACkg`) probablemente ya no se puede reproducir.
-- La alineación centrada o a la derecha se conserva como `<div class="align-center|align-right">` (35 posts).
+- La alineación centrada o a la derecha se conserva como `<div class="align-center|align-right">`.
 
 ## Registro
 - 2026-11-17 — CP0 y CP1a completos.
@@ -87,8 +82,12 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - 2026-11-17 — CP4 completo: publicado en GitHub Pages. Falta el DNS.
 - 2026-11-17 — DNS y HTTPS listos; correo real y portada provisional de *Pista Transcendental No. 9*.
 - Moño de luto para Zoren en «Sobre mí», en el texto y en el pie de foto (shortcode `{{< luto >}}` y opción `|luto` de `gallery`).
-- Los 84 posts de El Canto de Lemuria quedan como `draft: true`, porque Luna reservó ese material para novelas. El importador lo hace solo (`DRAFT_ORIGINS`). El filtro por blog se oculta si hay un solo origen publicado. **Siguen visibles en el repo público y en Blogspot.**
-- Arreglo: las páginas de etiquetas y de origen (`/tags/<x>/`, `/origen/<x>/`) salían vacías desde el primer deploy. Hugo 0.152 les aplicaba `_default/taxonomy.html`. Las plantillas pasaron a `layouts/term.html` y `layouts/taxonomy.html`, y los textos a español («Etiqueta», «Etiquetas», «Blog de origen»).
+- Arreglo: las páginas de etiquetas y de origen (`/tags/<x>/`, `/origen/<x>/`) salían vacías desde el primer deploy. Hugo 0.152 les aplicaba `_default/taxonomy.html`. Las plantillas pasaron a `layouts/term.html` y `layouts/taxonomy.html`, y los textos a español («Etiqueta», «Etiquetas»).
+- 2026-11-17 — Eliminado por completo el blog de Blogspot, a pedido de Luna, que reserva ese material para novelas:
+  - Se borraron sus posts e imágenes.
+  - El importador ya no lo trae.
+  - Se quitaron la taxonomía `origen` y el filtro del blog.
+  - Se reescribió el historial de git (`git filter-branch`) y se hizo force-push, así que **cambiaron los hashes desde el commit del importador en adelante**. Cualquier clon anterior debe volver a clonarse.
 
 ## Mejoras aplicadas (2026-11-17, segunda ronda)
 - [x] Lora auto-hospedada; ya no hay llamadas a Google Fonts.
