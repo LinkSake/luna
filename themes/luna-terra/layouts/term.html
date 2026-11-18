@@ -2,7 +2,7 @@
 {{ define "main" }}
 <section class="blog">
   <header class="blog__header">
-    <p class="eyebrow"><a href="{{ "/blog/" | relURL }}">Blog</a> · {{ .Data.Singular | humanize }}</p>
+    <p class="eyebrow"><a href="{{ "/blog/" | relURL }}">Blog</a> · {{ index (dict "tag" "Etiqueta" "origen" "Blog de origen") .Data.Singular | default (.Data.Singular | humanize) }}</p>
     <h1 class="page-title">{{ .Title }}</h1>
   </header>
   {{ partial "post-list.html" . }}

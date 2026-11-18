@@ -69,6 +69,10 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - [x] DNS: `luna.eltelar.xyz` ya resuelve y el sitio está en línea.
 - [x] HTTPS forzado en Pages; deploy re-ejecutado para generar URLs `https://`.
 - [x] Posts de Blogspot (El Canto de Lemuria): todos ocultos como borrador a pedido de Luna.
+- [ ] **Decisión pendiente sobre El Canto de Lemuria**, que define qué hacer con la taxonomía `origen`:
+  - Si no vuelve: quitar `origen` (las rutas `/origen/…`, el link al blog de origen en cada post y el filtro) y dejar solo las etiquetas.
+  - Si vuelve: quitar `draft: true` (y `DRAFT_ORIGINS` en el importador); el filtro del blog reaparece solo.
+  - Mientras tanto `/origen/transcisthor/` funciona y `/origen/el-canto-de-lemuria/` da 404.
 
 ## Notas del blog importado
 - 7 posts de Blogspot no tenían título; el importador les puso su primera línea (por ejemplo «Muerde, muerde mis sombras Belial»).
@@ -84,6 +88,7 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - 2026-11-17 — DNS y HTTPS listos; correo real y portada provisional de *Pista Transcendental No. 9*.
 - Moño de luto para Zoren en «Sobre mí», en el texto y en el pie de foto (shortcode `{{< luto >}}` y opción `|luto` de `gallery`).
 - Los 84 posts de El Canto de Lemuria quedan como `draft: true`, porque Luna reservó ese material para novelas. El importador lo hace solo (`DRAFT_ORIGINS`). El filtro por blog se oculta si hay un solo origen publicado. **Siguen visibles en el repo público y en Blogspot.**
+- Arreglo: las páginas de etiquetas y de origen (`/tags/<x>/`, `/origen/<x>/`) salían vacías desde el primer deploy. Hugo 0.152 les aplicaba `_default/taxonomy.html`. Las plantillas pasaron a `layouts/term.html` y `layouts/taxonomy.html`, y los textos a español («Etiqueta», «Etiquetas», «Blog de origen»).
 
 ## Mejoras aplicadas (2026-11-17, segunda ronda)
 - [x] Lora auto-hospedada; ya no hay llamadas a Google Fonts.
