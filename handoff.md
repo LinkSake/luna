@@ -68,7 +68,7 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - [x] Portada provisional (teaser «Coming soon») de *Pista Transcendental No. 9* en `content/obras/pista-transcendental-9-portada.jpg`. Cuando exista la definitiva, reemplaza ese archivo; el estado sigue diciendo «portada e ilustraciones pendientes».
 - [x] DNS: `luna.eltelar.xyz` ya resuelve y el sitio está en línea.
 - [x] HTTPS forzado en Pages; deploy re-ejecutado para generar URLs `https://`.
-- [ ] Revisar posts viejos de Blogspot: para ocultar uno, agrega `draft: true` en su front matter.
+- [x] Posts de Blogspot (El Canto de Lemuria): todos ocultos como borrador a pedido de Luna.
 
 ## Notas del blog importado
 - 7 posts de Blogspot no tenían título; el importador les puso su primera línea (por ejemplo «Muerde, muerde mis sombras Belial»).
@@ -82,6 +82,8 @@ Screenshots sin la extensión de Chrome: usar el chromium headless de Playwright
 - 2026-11-17 — CP3 completo (QA y correcciones de la revisión).
 - 2026-11-17 — CP4 completo: publicado en GitHub Pages. Falta el DNS.
 - 2026-11-17 — DNS y HTTPS listos; correo real y portada provisional de *Pista Transcendental No. 9*.
+- Moño de luto para Zoren en «Sobre mí», en el texto y en el pie de foto (shortcode `{{< luto >}}` y opción `|luto` de `gallery`).
+- Los 84 posts de El Canto de Lemuria quedan como `draft: true`, porque Luna reservó ese material para novelas. El importador lo hace solo (`DRAFT_ORIGINS`). El filtro por blog se oculta si hay un solo origen publicado. **Siguen visibles en el repo público y en Blogspot.**
 
 ## Mejoras aplicadas (2026-11-17, segunda ronda)
 - [x] Lora auto-hospedada; ya no hay llamadas a Google Fonts.

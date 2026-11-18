@@ -99,6 +99,10 @@ strong, b { color: var(--c-text); font-weight: 700; }
 
 .icon { width: 18px; height: 18px; flex: none; }
 
+/* Moño de luto junto a un nombre */
+.luto { display: inline-block; width: .85em; height: .85em; margin-left: .2em; vertical-align: -.08em; color: #1f1f1f; }
+.luto svg { display: block; width: 100%; height: 100%; }
+
 /* ---------- Header ---------- */
 
 .site-header {

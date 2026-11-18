@@ -1,6 +1,7 @@
 {{/*
   Galería masonry con lightbox.
   Uso: {{< gallery images="a.jpg|Pie de foto, b.jpg" alt="texto por defecto" cols="3" >}}
+  Un tercer campo «luto» (a.jpg|Pie|luto) agrega el moño de luto al pie de foto.
 */}}
 {{- $cols := .Get "cols" | default "3" -}}
 {{- $defaultAlt := .Get "alt" | default "" -}}
@@ -10,13 +11,15 @@
     {{- $parts := split (trim . " ") "|" -}}
     {{- $name := trim (index $parts 0) " " -}}
     {{- $caption := "" -}}{{- if gt (len $parts) 1 -}}{{- $caption = trim (index $parts 1) " " -}}{{- end -}}
+    {{- $luto := and (gt (len $parts) 2) (eq (trim (index $parts 2) " ") "luto") -}}
+    {{- $label := cond (and $luto $caption) (printf "%s (en memoria)" $caption) $caption -}}
     {{- with $.Page.Resources.Get $name -}}
       {{- $big := partial "large.html" . -}}
       <figure class="gallery__item">
-        <a href="{{ $big.RelPermalink }}" data-lightbox="{{ $group }}" data-caption="{{ $caption }}">
-          {{ partial "img.html" (dict "img" . "alt" ($caption | default $defaultAlt) "sizes" (printf "(min-width: 900px) %dvw, 50vw" (div 90 (int $cols))) "widths" (slice 400 700 1000)) }}
+        <a href="{{ $big.RelPermalink }}" data-lightbox="{{ $group }}" data-caption="{{ $label }}">
+          {{ partial "img.html" (dict "img" . "alt" ($label | default $defaultAlt) "sizes" (printf "(min-width: 900px) %dvw, 50vw" (div 90 (int $cols))) "widths" (slice 400 700 1000)) }}
         </a>
-        {{- with $caption }}<figcaption>{{ . }}</figcaption>{{ end }}
+        {{- with $caption }}<figcaption>{{ . }}{{ if $luto }}{{ partial "luto.html" $ }}{{ end }}</figcaption>{{ end }}
       </figure>
     {{- else -}}
       {{- errorf "gallery: no se encontró la imagen %q en %s" $name $.Page.File.Path -}}

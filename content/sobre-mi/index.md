@@ -41,8 +41,8 @@ Mi podcast feminista, disponible en Spotify.
 
 ## Fuera de la escritura
 
-Comparto espacio y vida con mis gatos Zoren y Loki.
+Comparto espacio y vida con mis gatos Zoren{{< luto >}} y Loki.
 
-{{< gallery images="mascota-zoren.jpg|Zoren, mascota-loki.jpg|Loki" cols="2" >}}
+{{< gallery images="mascota-zoren.jpg|Zoren|luto, mascota-loki.jpg|Loki" cols="2" >}}
 
 {{< gallery images="foto-personal-amistades-1.jpg|Con amistades, foto-personal-amistades-2.jpg|Con amistades" cols="2" >}}

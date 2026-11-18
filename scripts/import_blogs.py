@@ -45,6 +45,10 @@ BS_FEED = "https://elcantodelemuria.blogspot.com/feeds/posts/default?alt=json&ma
 ORIGIN_WP = "Transcisthor"
 ORIGIN_BS = "El Canto de Lemuria"
 
+# Luna reservó los textos de El Canto de Lemuria para futuras novelas: se importan
+# como borrador (draft: true) para que no se publiquen en el sitio.
+DRAFT_ORIGINS = {ORIGIN_BS}
+
 USER_AGENT = "Mozilla/5.0 (compatible; luna-blog-import/1.0; +https://github.com/)"
 TIMEOUT = 20
 RETRIES = 3
@@ -1292,6 +1296,7 @@ def main() -> int:
               f"title: {yaml_str(title)}",
               f"date: {post['date']}",
               f"origen: [{yaml_str(post['origin'])}]",
+              *(["draft: true"] if post["origin"] in DRAFT_ORIGINS else []),
               f"original_url: {yaml_str(post['url'])}"]
         if tags:
             fm.append("tags: [" + ", ".join(yaml_str(t) for t in tags) + "]")

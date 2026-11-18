@@ -44,6 +44,7 @@ scripts/import_blogs.py    importador de los blogs anteriores
   {{< figure src="foto.jpg" alt="Descripción" caption="Pie de foto" >}}
   {{< gallery images="a.jpg|Pie, b.jpg" alt="Texto alternativo" cols="3" >}}
   ```
+  Para poner un moño de luto junto a un nombre: `{{< luto >}}` en el texto o `foto.jpg|Nombre|luto` en una galería.
   Las imágenes se publican como WebP redimensionado y sin metadatos. Los originales no se publican.
 - **Nueva entrada de blog:** crea `content/blog/AAAA-MM-DD-titulo/index.md` con este front matter:
   ```yaml
@@ -63,6 +64,8 @@ scripts/import_blogs.py    importador de los blogs anteriores
 - Limpia el HTML y conserva poemas, alineaciones y videos.
 - Descarga las imágenes sin metadatos.
 - Escribe un bundle por entrada.
+
+Las entradas de El Canto de Lemuria se importan como borrador (`draft: true`, constante `DRAFT_ORIGINS` del script), porque Luna reservó ese material para futuras novelas. No aparecen en el sitio, pero sus archivos siguen en este repo público.
 
 ```bash
 python3 -I scripts/import_blogs.py
